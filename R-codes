@@ -32,12 +32,22 @@ TidyTable <- Merged_Table %>% select(subject, code, contains("mean"), contains("
 TidyTable$code <- activities[TidyTable$code, 2]
 # typeof(TidyTable$code):"integer"
 
-
+#Appropriately labels the data set with descriptive variable names.
 names(TidyTable)[2] = "Activity"
-names(TidyTable) <- gsub("^t", "Time", name.newnames(TidyTable))
-names(TidyTable)<-gsub("Acc", "Accelerometer", names(TidyData))
-names(TidyTable)<-gsub("Gyro", "Gyroscope", names(TidyData))
-names(TidyTable)<-gsub("^f", "Frequency", names(TidyData))
-names(TidyTable) <- gsub("-mean-", "_Mean_", names(TidyData))
-name.new <- gsub("-std-", "_StDeviation_", name.new)
-name.new <- gsub("Mag", "Magnitude", name.new)
+names(TidyTable) <- gsub("^t", "Time", names(TidyTable))
+names(TidyTable)<-gsub("Acc", "Accelerometer", names(TidyTable))
+names(TidyTable)<-gsub("Gyro", "Gyroscope", names(TidyTable))
+names(TidyTable)<-gsub("^f", "Frequency", names(TidyTable))
+names(TidyTable) <- gsub(".mean.", "_Mean_", names(TidyTable))
+names(TidyTable) <- gsub(".std.", "_StDeviation_", names(TidyTable))
+names(TidyTable) <- gsub("Mag", "Magnitude", names(TidyTable))
+names(TidyTable) <- gsub("^a", "A", names(TidyTable))
+names(TidyTable) <- gsub("tBody", "TimeBody", names(TidyTable))
+
+
+
+FinalTable <- TidyTable %>%
+    group_by(subject, Activity) %>%
+    summarise_all(funs(mean))
+write.table(FinalTable, "FinalTable.txt", row.name=FALSE)
+
