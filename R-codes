@@ -9,13 +9,13 @@ if (!file.exists('./UCI HAR Dataset.zip')){
 }
 
 #READING DATA 
-features <- read.table("UCI HAR Dataset/features.txt", col.names = c("n","function"))
+features <- read.table("UCI HAR Dataset/features.txt", col.names = c("n","func"))
 activities <- read.table("UCI HAR Dataset/activity_labels.txt", col.names = c("code", "activity"))
 subject_test <- read.table("UCI HAR Dataset/test/subject_test.txt", col.names = "subject")
-x_test <- read.table("UCI HAR Dataset/test/X_test.txt", col.names = features$function)
+x_test <- read.table("UCI HAR Dataset/test/X_test.txt", col.names = features$func)
 y_test <- read.table("UCI HAR Dataset/test/y_test.txt", col.names = "code")
 subject_train <- read.table("UCI HAR Dataset/train/subject_train.txt", col.names = "subject")
-x_train <- read.table("UCI HAR Dataset/train/X_train.txt", col.names = features$functions)
+x_train <- read.table("UCI HAR Dataset/train/X_train.txt", col.names = features$func)
 y_train <- read.table("UCI HAR Dataset/train/y_train.txt", col.names = "code")
 
 #CREATING ONE DATA SET BY MERGING ALL THE DATA.
@@ -25,6 +25,19 @@ Subject <- rbind(subject_train, subject_test)
 Merged_Table <- cbind(Subject, Y, X)
 
 #Extracts only the measurements on the mean and standard deviation for each measurement.
-TidyData <- Merged_Data %>% select(subject, code, contains("mean"), contains("std"))
+TidyTable <- Merged_Table %>% select(subject, code, contains("mean"), contains("std"))
+
+#Uses descriptive activity names to name the activities in the data set. 
+#Since I have not use the type of TidyData$code to Character for doing this section I use the following syntax:
+TidyTable$code <- activities[TidyTable$code, 2]
+# typeof(TidyTable$code):"integer"
 
 
+names(TidyTable)[2] = "Activity"
+names(TidyTable) <- gsub("^t", "Time", name.newnames(TidyTable))
+names(TidyTable)<-gsub("Acc", "Accelerometer", names(TidyData))
+names(TidyTable)<-gsub("Gyro", "Gyroscope", names(TidyData))
+names(TidyTable)<-gsub("^f", "Frequency", names(TidyData))
+names(TidyTable) <- gsub("-mean-", "_Mean_", names(TidyData))
+name.new <- gsub("-std-", "_StDeviation_", name.new)
+name.new <- gsub("Mag", "Magnitude", name.new)
