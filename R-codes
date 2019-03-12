@@ -49,5 +49,11 @@ names(TidyTable) <- gsub("tBody", "TimeBody", names(TidyTable))
 FinalTable <- TidyTable %>%
     group_by(subject, Activity) %>%
     summarise_all(funs(mean))
+   
 write.table(FinalTable, "FinalTable.txt", row.name=FALSE)
+
+#save "FinalTable" in CSV format
+mac<-as.data.frame(TidyTable)
+write.csv(mac, "FinalTable.csv", row.names = FALSE)
+
 
