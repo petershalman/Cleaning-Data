@@ -1,1 +1,12 @@
+library(data.table)
+library(dplyr)
 
+**# Downloading file from the source**
+fileUrl = 'https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip'
+if (!file.exists('./UCI HAR Dataset.zip')){
+  download.file(fileUrl,'./UCI HAR Dataset.zip', mode = 'wb')
+  unzip("UCI HAR Dataset.zip", exdir = getwd())
+}
+
+**#READING DATA**
+features <- read.table("UCI HAR Dataset/features.txt", col.names = c("n","fun"))
